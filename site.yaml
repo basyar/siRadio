@@ -6,5 +6,5 @@ handlers:
   static_dir: '/'
 - url: "/cache.mf"
   static_files: 'cache.mf'
-  mime_type: text/cache-manifest
-  upload: "/cache.mf"
+  mime_type: 'text/cache-manifest'
+  upload: "cache.mf"
