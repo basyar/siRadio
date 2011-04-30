@@ -4,7 +4,7 @@ handlers:
   upload: '.*'
 - url: '/'
   static_dir: '/'
-- url: /(.*\.mf)
+- url: "/cache.mf"
   static_files: 'cache.mf'
   mime_type: text/cache-manifest
-  upload: /(.*\.mf)
+  upload: "/cache.mf"
