@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-#v1
+#v3
 
 CACHE:
 /img/circle.png

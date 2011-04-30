@@ -77,7 +77,7 @@ article h4{
 	background-color: #FF0028;
 }
 
-.tip,section{
+.tip ,section{
 	-webkit-transition: all 1s ease-in-out;
 	display: none;
 	opacity:0;
@@ -97,4 +97,7 @@ code{
 	position: relative;
 	right: -115px;
 	top: 10px;
+}
+.no-appleios .twitn{
+	display: none!important;
 }

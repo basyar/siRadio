@@ -1,21 +1,94 @@
-// Check if a new cache is available on page load.
+Modernizr.addTest('ipad', function () {
+  return !!navigator.userAgent.match(/iPad/i);
+});
+
+Modernizr.addTest('iphone', function () {
+  return !!navigator.userAgent.match(/iPhone/i);
+});
+
+Modernizr.addTest('ipod', function () {
+  return !!navigator.userAgent.match(/iPod/i);
+});
+
+Modernizr.addTest('android', function () {
+  return !!navigator.userAgent.match(/Android 2.2/i);
+});
+
+Modernizr.addTest('appleios', function () {
+  return (Modernizr.ipad || Modernizr.ipod || Modernizr.iphone);
+});
+
 window.addEventListener('load', function(e) {
 
   window.applicationCache.addEventListener('updateready', function(e) {
     if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
-      // Browser downloaded a new app cache.
-      // Swap it in and reload the page to get the new hotness.
       window.applicationCache.swapCache();
       if (confirm('Na voljo je nova verzija strani. Naložim?')) {
         window.location.reload();
       }
-    } else {
-      // Manifest didn't changed. Nothing new to server.
     }
   }, false);
 
 }, false);
 
+function murmur(key, seed) {
+    var remainder, bytes, h1, h1b, c1, c1b, c2, c2b, k1, i;
+
+    remainder = key.length % 4;
+    bytes = key.length - remainder;
+    h1 = 0x971e137b ^ seed;
+    c1 = 0x95543787;
+    c2 = 0x2ad7eb25;
+    i = 0;
+
+    while (i < bytes) {
+        k1 = 
+          ((key.charCodeAt(i) & 0xff)) |
+          ((key.charCodeAt(++i) & 0xff) << 8) |
+          ((key.charCodeAt(++i) & 0xff) << 16) |
+          ((key.charCodeAt(++i) & 0xff) << 24);
+        ++i;
+
+        k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16));
+        k1 = (k1 << 11) | (k1 >>> 21);
+        k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16));
+        h1 ^= k1;
+
+        h1b = (((h1 & 0xffff) * 3) + ((((h1 >>> 16) * 3) & 0xffff) << 16));
+        h1 = (((h1b & 0xffff) + 0x52dce729) + ((((h1b >>> 16) + 0x52dce729) & 0xffff) << 16));
+
+        c1b = (((c1 & 0xffff) * 5) + ((((c1 >>> 16) * 5) & 0xffff) << 16)); 
+        c1 = (((c1b & 0xffff) + 0x7b7d159c) + ((((c1b >>> 16) + 0x7b7d159c) & 0xffff) << 16));
+        c2b = (((c2 & 0xffff) * 5) + ((((c2 >>> 16) * 5) & 0xffff) << 16)); 
+        c2 = (((c2b & 0xffff) + 0x6bce6396) + ((((c2b >>> 16) + 0x6bce6396) & 0xffff) << 16));
+    }
+
+    k1 = 0;
+
+    switch (remainder) {
+        case 3: k1 ^= (key.charCodeAt(i + 2) & 0xff) << 16;
+        case 2: k1 ^= (key.charCodeAt(i + 1) & 0xff) << 8;
+        case 1: k1 ^= (key.charCodeAt(i) & 0xff);
+
+        k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16));
+        k1 = (k1 << 11) | (k1 >>> 21);
+        k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16));
+        h1 ^= k1;
+
+        h1b = (((h1 & 0xffff) * 3) + ((((h1 >>> 16) * 3) & 0xffff) << 16));
+        h1 = (((h1b & 0xffff) + 0x52dce729) + ((((h1b >>> 16) + 0x52dce729) & 0xffff) << 16));
+    }
+
+    h1 ^= key.length;
+
+    h1 ^= h1 >>> 16;
+    h1 = (((h1 & 0xffff) * 0x85ebca6b) + ((((h1 >>> 16) * 0x85ebca6b) & 0xffff) << 16));
+    h1 ^= h1 >>> 13;
+    h1 = (((h1 & 0xffff) * 0xc2b2ae35) + ((((h1 >>> 16) * 0xc2b2ae35) & 0xffff) << 16));
+    h1 ^= h1 >>> 16;
+
+    return h1 >>> 0;
+}
  (function($){
       $.extend(
           {
@@ -64,7 +137,7 @@ window.addEventListener('load', function(e) {
                       dataType: "jsonp",
                       success: successCallback,
                       async: doAsynchronously,
-                      cache: false,
+                      cache: true,
                       data: {
                           q: query,
                           format: "json",
@@ -86,70 +159,110 @@ window.addEventListener('load', function(e) {
 
 
 $(document).ready(function() {
-	radio("ra1", "http://192.168.1.2:8000/ra1.mp3")
-	radio("val202", "http://192.168.1.2:8000/val202.mp3")
-	$.yql('select title,content from rss where url="http://www.rtvslo.si/podcasts/dogodki_in_odmevi.xml"', function(data) {
-	  radio("dg", data.query.results.item[0].content.url)
-	  $("#dginfo h4").html($.jPlayer.convertTime( data.query.results.item[0].content.duration) );
-	  $("#dginfo h2").html(data.query.results.item[0].title).data("opis", data.query.results.item[0].title);;
+
+	//podcasti
+	dodajPodcast("Dogodki in Odmevi", "http://www.rtvslo.si/podcasts/dogodki_in_odmevi.xml",function(id) {
+		if (!Modernizr.android || !Modernizr.appleios) {
+			$("div.tip").first().remove();
+			$("div.tip").first().addClass("gledam").find("section").first().addClass("gledam");
+		};
 	});
-	//"
+
+	if (Modernizr.android || Modernizr.appleios) {
+		dodajRadio("Prvi Program", "http://192.168.1.2:8000/ra1.mp3", "@radioprvi", function(id) {
+			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
+				spored(id,data);
+			});	
+		});
+		dodajRadio("VAL 202", "http://192.168.1.2:8000/val202.mp3", "@val202", function(id) {
+			$.yql('select * from html where url="http://www.rtvslo.si/val202/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
+				spored(id,data);
+			});
+		});
+	}
+
+	if (Modernizr.touch){
+		$(document).touchwipe({
+		     wipeLeft: function() {
+		     	var gledam =$("div.tip"); 
+		     	if (gledam.next().length) {
+		     		$("section").removeClass("gledam");
+		     		gledam.removeClass("gledam").next().addClass("gledam").find("section").first().addClass("gledam");
+		     	}
+		     },
+		     wipeRight: function() {
+		     	var gledam =$("div.tip"); 
+		     	if (gledam.prev().length) {
+		     		$("section").removeClass("gledam");
+		     		gledam.removeClass("gledam").prev().addClass("gledam").find("section").first().addClass("gledam");
+		     	};
+		     },
+		     wipeDown: function() {
+		     	var gledam =$("section.gledam"); 
+		     	if (gledam.next().length) {
+			     	gledam.removeClass("gledam")
+			     	.next().addClass("gledam")
+		     	};
+		     },
+		     wipeUp: function() { 
+		     	var gledam =$("section.gledam"); 
+		     	if (gledam.prev().length) {
+			     	gledam.removeClass("gledam")
+			     	.prev().addClass("gledam")
+
+		     	};
+		     }
+		});
+	} else {
+	  // bind to normal click, mousemove, etc
+	}  
+
+	if (Modernizr.appleios) {
+		$(".twitn").bind("click",function() {
+			var tekst = $(this).prev().prev().data("opis");
+			var kaj = $(this).parent().parent().find("h1").text();
+			window.open("twitter://post?message="+encodeURIComponent("Poslušam "+tekst+", na radiu " + kaj +" #siradioapp"))
+		})
+	};
+
 	$("div.tip").first().addClass("gledam").find("section").first().addClass("gledam");
-	predvaja();
-	$(document).touchwipe({
-	     wipeLeft: function() {
-	     	var gledam =$("div.tip"); 
-	     	if (gledam.next().length) {
-	     		$("section").removeClass("gledam");
-	     		gledam.removeClass("gledam").next().addClass("gledam").find("section").first().addClass("gledam");
-	     	}
-	     },
-	     wipeRight: function() {
-	     	var gledam =$("div.tip"); 
-	     	if (gledam.prev().length) {
-	     		$("section").removeClass("gledam");
-	     		gledam.removeClass("gledam").prev().addClass("gledam").find("section").first().addClass("gledam");
-	     	};
-	     },
-	     wipeDown: function() {
-	     	var gledam =$("section.gledam"); 
-	     	if (gledam.next().length) {
-		     	gledam.removeClass("gledam")
-		     	.next().addClass("gledam")
-	     	};
-	     },
-	     wipeUp: function() { 
-	     	var gledam =$("section.gledam"); 
-	     	if (gledam.prev().length) {
-		     	gledam.removeClass("gledam")
-		     	.prev().addClass("gledam")
-
-	     	};
-	     }
-	});
-	$(".twitn").bind("click",function() {
-		var tekst = $(this).prev().prev().data("opis");
-		var kaj = $(this).parent().parent().find("h1").text();
-		window.open("twitter://post?message="+encodeURIComponent("Poslušam "+tekst+", na radiu " + kaj +" #siradioapp"))
-	})
 });
-function predvaja () {
-	$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
-		spored("ra1info",data);
-	});
 
-	$.yql('select * from html where url="http://www.rtvslo.si/val202/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
-		spored("val202info",data);
+function dodajRadio(ime, url, twitter, trenutno_cb) {
+	var id = murmur(ime);
+	$( "#pustinja" ).tmpl( {
+		naslov: ime,
+		id: id,
+		url: url,
+		twitter: twitter,
+	} ).appendTo( ".tip:first nav" );
+	trenutno_cb(id);
+	setTimeout(function() {
+		trenutno_cb(id)
+	},1000*(60-(new Date()).getSeconds()));
+}
+
+function dodajPodcast(ime, url,cb) {
+	var id = murmur(ime);
+	$.yql('select title,content from rss where url="'+url+'"', function(data) {
+		$( "#pustinja" ).tmpl( {
+			naslov: ime,
+			id: id,
+			url: url,
+		} ).appendTo( ".tip:last nav" );
+		predvajalnik(id, data.query.results.item[0].content.url);
+		$("#"+id+" article h4").html($.jPlayer.convertTime( data.query.results.item[0].content.duration) );
+		$("#"+id+" article h2").html(data.query.results.item[0].title).data("opis", data.query.results.item[0].title);
+		cb(id);
 	});
-	//select * from html where url='http://www.rtvslo.si/val202/onair/index' and xpath="//body/p"
-	setTimeout(predvaja,1000*(60-(new Date()).getSeconds()))
 }
 
 String.prototype.cifra = function() {
   return this.toString().length != 1?this.toString():"0"+this.toString();
 }
 
-function spored (ime,data) {
+function spored (kaj, data) {
+	  var id = $("#"+kaj);
 	  var sedaj = [];
 	  var set = false;
 	  data = data.query.results.td;
@@ -164,23 +277,21 @@ function spored (ime,data) {
 	  sedaj.forEach(function(data, index) {
 	  	var urca =Number( (new Date()).getHours().toString().cifra()+(new Date()).getMinutes().toString().cifra() );
 	  	if (urca < data.ura  && !set) {
-	  		$("#"+ime+" h2").html("<code>"+sedaj[index-1].kdaj+"</code> "+sedaj[index-1].opis).data("opis", sedaj[index-1].opis);
-	  		$("#"+ime+" h4").html("<code>"+data.kdaj+"</code> "+data.opis);
+	  		id.find("article h2").html("<code>"+sedaj[index-1].kdaj+"</code> "+sedaj[index-1].opis).data("opis", sedaj[index-1].opis);
+	  		id.find("article h4").html("<code>"+data.kdaj+"</code> "+data.opis);
 	  		set = true;
 
 	  	}	
 	  })
 	  if (!set) {
-	  	$("#"+ime+" h2").html("<code>"+sedaj[sedaj.length-1].kdaj+"</code> "+sedaj[sedaj.length-1].opis).data("opis", sedaj[sedaj.length-1].opis);
-	  	$("#"+ime+" h4").html("<code>"+sedaj[0].kdaj+"</code> "+sedaj[0].opis);
+	  	id.find("article h2").html("<code>"+sedaj[sedaj.length-1].kdaj+"</code> "+sedaj[sedaj.length-1].opis).data("opis", sedaj[sedaj.length-1].opis);
+	  	id.find("article h4").html("<code>"+sedaj[0].kdaj+"</code> "+sedaj[0].opis);
 	  };
 }
 
-function radio(ime, url) {
+function predvajalnik(ime, url) {
 
 		var dragging = false;
-		
-		$("#"+ime).html('<span class="player"></span><span class="circle"></span><span class="progress"></span><span class="buffer"></span><span class="drag"></span><div class="button"><span class="icon play"></span><span class="icon pause"></span></div>');
 		
 		// init
 		
@@ -197,25 +308,17 @@ function radio(ime, url) {
 	    	swfPath: "",
 			supplied: "mp3"         
 	  	});  
-
-
-
-
-		
-		// preload, update, end
-		
-		
 		
 		player.bind($.jPlayer.event.progress, function(event) {    
 				
-			var audio = $("#"+ime+' audio').get(0);
+			var audio = player.find('audio').get(0);
 			var pc = 0;    
 					
 			if ((audio.buffered != undefined) && (audio.buffered.length != 0)) {
 			 	pc = parseInt(((audio.buffered.end(0) / audio.duration) * 100), 10); 
 			  	displayBuffered(pc);
 			  	if(pc >= 100) {
-			  		$("#"+ime+' .buffer').addClass("loaded");
+			  		$("#"+ime+' .gplayer .buffer').addClass("loaded");
 			  	} 
  
 			}        
@@ -232,20 +335,20 @@ function radio(ime, url) {
 		    	displayProgress(pc);
 			}
 			if (event.jPlayer.status.currentTime) {
-				$("#"+ime+' .buffer').addClass("loaded");
+				$("#"+ime+' .gplayer .buffer').addClass("loaded");
 			};
 		});
 		
 		player.bind($.jPlayer.event.ended, function(event) {   
-			$("#"+ime+' .circle').removeClass( "rotate" );
-			$("#"+ime+"").removeClass( "play" );
-			$("#"+ime+' .progress').css({rotate: '0deg'});
+			$("#"+ime+' .gplayer .circle').removeClass( "rotate" );
+			$("#"+ime+" .gplayer").removeClass( "play" );
+			$("#"+ime+' .gplayer .progress').css({rotate: '0deg'});
 		});
 		
 		player.bind($.jPlayer.event.pause, function(event) {   
-			$("#"+ime+' .circle').removeClass( "rotate" );
-			$("#"+ime+"").removeClass( "play" );
-			$("#"+ime+' .progress').css({rotate: '0deg'});
+			$("#"+ime+' .gplayer .circle').removeClass( "rotate" );
+			$("#"+ime+" .gplayer").removeClass( "play" );
+			$("#"+ime+' .gplayer .progress').css({rotate: '0deg'});
 		});	
 
 		player.bind($.jPlayer.event.play, function(event) {   
@@ -270,11 +373,11 @@ function radio(ime, url) {
 		
 		function onClick() {  		
 	        if(player.data("jPlayer").status.paused) {
-				$("#"+ime+"").addClass( "play" );
+				$("#"+ime+" .gplayer").addClass( "play" );
 				player.jPlayer("play");
 			} else {
-				$("#"+ime+' .circle').removeClass( "rotate" );
-				$("#"+ime+"").removeClass( "play" );
+				$("#"+ime+' .gplayer .circle').removeClass( "rotate" );
+				$("#"+ime+" .gplayer").removeClass( "play" );
 				player.jPlayer("stop");
 			}
 		};
@@ -289,7 +392,7 @@ function radio(ime, url) {
 		clickControl.grab({
 			onstart: function(){
 				dragging = true;
-				$("#"+ime+' .button').css( "pointer-events", "none" );
+				$("#"+ime+' .gplayer .button').css( "pointer-events", "none" );
 				
 			}, onmove: function(event){
 				var pc = getArcPc(event.position.x, event.position.y);
@@ -300,7 +403,7 @@ function radio(ime, url) {
 				dragging = false;
 				var pc = getArcPc(event.position.x, event.position.y);
 				player.jPlayer("playHead", pc).jPlayer("play");
-				$("#"+ime+' .button').css( "pointer-events", "auto" );
+				$("#"+ime+' .gplayer .button').css( "pointer-events", "auto" );
 			}
 		});	
 		
