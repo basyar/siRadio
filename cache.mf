@@ -1,23 +1,26 @@
 CACHE MANIFEST
 
-#v3
+#v4
 
 CACHE:
-/img/circle.png
-/img/pause.png
-/img/circle-still.png
-/img/buffer.png
-/img/progress.png
-/img/bg.png
-/img/play.png
-/js/jquery.rotate.js
-/js/jquery.touchwipe.min.js
-/js/zen.js
-/js/jquery.grab.js
-/js/jquery.jplayer.min.js
-/css/style.css
-/css/zen.css
-/index.html
+css/style.css
+css/zen.css
+img/bg.png
+img/buffer.png
+img/circle-still.png
+img/circle.png
+img/icons.png
+img/pause.png
+img/play.png
+img/progress.png
+index.html
+js/jquery.grab.js
+js/jquery.jplayer.min.js
+js/jquery.rotate.js
+js/jquery.tmpl.min.js
+js/jquery.touchwipe.min.js
+js/modernizr-1.7.min.js
+js/zen.js
 
 NETWORK:
 *
