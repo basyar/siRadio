@@ -1,0 +1,20 @@
+CACHE MANIFEST
+
+CACHE:
+/img/circle.png
+/img/pause.png
+/img/circle-still.png
+/img/buffer.png
+/img/progress.png
+/img/bg.png
+/img/play.png
+/js/jquery.rotate.js
+/js/jquery.touchwipe.min.js
+/js/zen.js
+/js/jquery.grab.js
+/js/jquery.jplayer.min.js
+/css/style.css
+/css/zen.css
+
+NETWORK:
+*
