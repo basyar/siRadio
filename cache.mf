@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-#v4
+#v5
 
 CACHE:
 css/style.css
@@ -9,10 +9,12 @@ img/bg.png
 img/buffer.png
 img/circle-still.png
 img/circle.png
+img/fb.png
 img/icons.png
 img/pause.png
 img/play.png
 img/progress.png
+img/tw.png
 index.html
 js/jquery.grab.js
 js/jquery.jplayer.min.js
