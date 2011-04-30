@@ -36,7 +36,9 @@ article{
 	font-size: 22px;
 	color: #555;
 	text-shadow: 0px 0px 1px rgba(114,114,114,1);
+	-moz-box-shadow: inset 1px 1px 1px rgba(114,114,114,.3);
 	-webkit-box-shadow: inset 1px 1px 1px rgba(114,114,114,.3);
+	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 }
 
@@ -54,6 +56,8 @@ article h4{
 	font-size: 30px;
 	color: rgba(190,190,190,.4);
 	font-weight: bolder;
+	transform: rotate(90deg); 
+	-moz-transform: rotate(90deg); 
 	-webkit-transform: rotate(90deg); 
 	position: fixed;
 	left: -60px;
@@ -93,11 +97,20 @@ code{
 	display: block;
 }
 
-.twitn{
-	position: relative;
-	right: -115px;
-	top: 10px;
+.twitn img{
+	display: inline;
+	width: 27px;
+	height: 27px;
 }
 .no-appleios .twitn{
+	display: none!important;
+}
+
+.fbn img{
+	display: inline;
+	width: 27px;
+	height: 27px;
+}
+.no-appleios .fbn{
 	display: none!important;
 }
