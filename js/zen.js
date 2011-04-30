@@ -161,14 +161,18 @@ function murmur(key, seed) {
 $(document).ready(function() {
 
 	//podcasti
-	dodajPodcast("Dogodki in Odmevi", "http://www.rtvslo.si/podcasts/dogodki_in_odmevi.xml",function(id) {
-		if (!Modernizr.android || !Modernizr.appleios) {
+	dodajPodcast("Dogodki in odmevi", "http://www.rtvslo.si/podcasts/dogodki_in_odmevi.xml",function(id) {
+		if (!Modernizr.android && !Modernizr.appleios) {
 			$("div.tip").first().remove();
 			$("div.tip").first().addClass("gledam").find("section").first().addClass("gledam");
 		};
+		dodajPodcast("Druga jutranja kronika", "http://www.rtvslo.si/podcasts/druga_jutranja_kronika.xml",function() {});
+		dodajPodcast("Lahko noč otroci", "http://www.rtvslo.si/podcasts/lahko_noc_otroci.xml",function() {});
+		dodajPodcast("Odbita do bita", "http://www.rtvslo.si/podcasts/odbita_do_bita.xml",function() {});
 	});
 
 	if (Modernizr.android || Modernizr.appleios) {
+
 		dodajRadio("Prvi Program", "http://192.168.1.2:8000/ra1.mp3", "@radioprvi", function(id) {
 			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
 				spored(id,data);
@@ -214,7 +218,7 @@ $(document).ready(function() {
 		     }
 		});
 	} else {
-	  // bind to normal click, mousemove, etc
+	  // todo alternativna navigacija
 	}  
 
 	if (Modernizr.appleios) {
@@ -236,6 +240,7 @@ function dodajRadio(ime, url, twitter, trenutno_cb) {
 		url: url,
 		twitter: twitter,
 	} ).appendTo( ".tip:first nav" );
+	predvajalnik(id, url);
 	trenutno_cb(id);
 	setTimeout(function() {
 		trenutno_cb(id)
