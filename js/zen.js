@@ -89,6 +89,7 @@ function murmur(key, seed) {
 
     return h1 >>> 0;
 }
+
  (function($){
       $.extend(
           {
@@ -192,6 +193,7 @@ $(document).ready(function() {
 		     	if (gledam.next().length) {
 		     		$("section").removeClass("gledam");
 		     		gledam.removeClass("gledam").next().addClass("gledam").find("section").first().addClass("gledam");
+		     		posodobi_grip();
 		     	}
 		     },
 		     wipeRight: function() {
@@ -199,6 +201,7 @@ $(document).ready(function() {
 		     	if (gledam.prev().length) {
 		     		$("section").removeClass("gledam");
 		     		gledam.removeClass("gledam").prev().addClass("gledam").find("section").first().addClass("gledam");
+		     		posodobi_grip();
 		     	};
 		     },
 		     wipeDown: function() {
@@ -206,6 +209,7 @@ $(document).ready(function() {
 		     	if (gledam.next().length) {
 			     	gledam.removeClass("gledam")
 			     	.next().addClass("gledam")
+			     	posodobi_grip();
 		     	};
 		     },
 		     wipeUp: function() { 
@@ -213,10 +217,10 @@ $(document).ready(function() {
 		     	if (gledam.prev().length) {
 			     	gledam.removeClass("gledam")
 			     	.prev().addClass("gledam")
-
+			     	posodobi_grip();
 		     	};
 		     }
-		});
+		})
 	} else {
 	  // todo alternativna navigacija
 	}  
@@ -226,6 +230,7 @@ $(document).ready(function() {
 			var tekst = $(this).prev().prev().data("opis");
 			var kaj = $(this).parent().parent().find("h1").text();
 			window.open("twitter://post?message="+encodeURIComponent("Poslušam "+tekst+", na radiu " + kaj +" #siradioapp"))
+			return false;
 		})
 	};
 
@@ -241,10 +246,12 @@ function dodajRadio(ime, url, twitter, trenutno_cb) {
 		twitter: twitter,
 	} ).appendTo( ".tip:first nav" );
 	predvajalnik(id, url);
-	trenutno_cb(id);
 	setTimeout(function() {
 		trenutno_cb(id)
 	},1000*(60-(new Date()).getSeconds()));
+	$('<span class="handle">'+($(".tip:first nav section").length)+'</span>').appendTo( ".tip:first .grip" )
+	posodobi_grip();
+	trenutno_cb(id);
 }
 
 function dodajPodcast(ime, url,cb) {
@@ -258,8 +265,14 @@ function dodajPodcast(ime, url,cb) {
 		predvajalnik(id, data.query.results.item[0].content.url);
 		$("#"+id+" article h4").html($.jPlayer.convertTime( data.query.results.item[0].content.duration) );
 		$("#"+id+" article h2").html(data.query.results.item[0].title).data("opis", data.query.results.item[0].title);
+		$('<span class="handle">'+($(".tip:last nav section").length)+'</span>').appendTo( ".tip:last .grip" );
+		posodobi_grip();
 		cb(id);
 	});
+}
+
+function posodobi_grip () {
+	$(".gledam .grip .handle").removeClass("izbran").parent().find(".handle:eq("+$(".tip.gledam nav section.gledam").index()+")").addClass("izbran");
 }
 
 String.prototype.cifra = function() {

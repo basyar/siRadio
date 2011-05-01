@@ -45,14 +45,16 @@ article{
 article h2{
 	margin:10px;
 	font-size:16px;
+	line-height: 18px;
 }
 article h4{
 	margin:5px;
 	font-size:13px;
 	color: #A4A4A4;
 	text-shadow: 0px 0px 0px rgba(114,114,114,1);
+	line-height: 15px;
 }
-.kontekst{
+h1.kontekst{
 	font-size: 30px;
 	color: rgba(190,190,190,.4);
 	font-weight: bolder;
@@ -60,25 +62,25 @@ article h4{
 	-moz-transform: rotate(90deg); 
 	-webkit-transform: rotate(90deg); 
 	position: fixed;
-	left: -60px;
-	top: 90px;
+	display: inline;
+	text-align: right;
+	text-shadow: none;
+	margin: 0;
+	padding: 0;
 }
-#rss.kontekst{
-	left: -25px;
+.stream .kontekst{
+	left: -65px;
+	top:93px;
+}
+.rss .kontekst{
 	top: 55px;
+	left: -30px;
 }
-#ra1.gplayer .circle {
+.gplayer:nth-child(odd) .circle {
 	background-color: #FF7300;
 }
-#ra1.gplayer.play .circle {
+.gplayer:nth-child(odd).play .circle {
 	background-color: #00A7CB;
-}
-
-#val202.gplayer .circle {
-	background-color: #FF7300;
-}
-#val202.gplayer.play .circle {
-	background-color: #FF0028;
 }
 
 .tip ,section{
@@ -113,4 +115,29 @@ code{
 }
 .no-appleios .fbn{
 	display: none!important;
+}
+
+.grip{
+	font-size: 20px;
+	color: rgba(190,190,190,.4);
+	transform: rotate(90deg); 
+	-moz-transform: rotate(90deg); 
+	-webkit-transform: rotate(90deg); 
+	position: fixed;
+	display: inline;
+	text-align: right;
+	text-shadow: none;
+	margin: 0;
+	padding: 0;
+}
+.stream .grip{
+	top: 215px;
+	left: 12px;
+}
+.rss .grip{
+	top: 153px;
+	left: 0;
+}
+.handle.izbran{
+	color: rgba(190,190,190,8);
 }
