@@ -174,9 +174,11 @@ $(document).ready(function() {
 
 	if (Modernizr.android || Modernizr.appleios) {
 
-		dodajRadio("Radi Študent", "http://kruljo.radiostudent.si:8000/hiq", "@radiostudent", function(id) {
-			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
-				spored(id,data);
+		dodajRadio("Radio Študent", "http://kruljo.radiostudent.si:8000/hiq", "@radiostudent", function(id) {
+			$.yql('select * from html where url="http://www.radiostudent.si/sections.php?artid=8534" and xpath="//table[@id=\'content\']//font[@class=\'content\']"', function(data) {
+				var vsebina = data.query.results.font[2].content.split(";");
+				var id = $("#"+kaj);
+				id.find("article h2").html("Ni podatka");
 			});	
 		});
 		
