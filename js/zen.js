@@ -174,15 +174,21 @@ $(document).ready(function() {
 
 	if (Modernizr.android || Modernizr.appleios) {
 
-		dodajRadio("Prvi Program", "http://192.168.1.2:8000/ra1.mp3", "@radioprvi", function(id) {
+		dodajRadio("Radi Študent", "http://kruljo.radiostudent.si:8000/hiq", "@radiostudent", function(id) {
 			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
 				spored(id,data);
 			});	
 		});
-		dodajRadio("VAL 202", "http://192.168.1.2:8000/val202.mp3", "@val202", function(id) {
+		
+		dodajRadio("VAL 202", "http://94.103.65.137:8000/val202", "@val202", function(id) {
 			$.yql('select * from html where url="http://www.rtvslo.si/val202/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
 				spored(id,data);
 			});
+		});
+		dodajRadio("Prvi Program", "http://192.168.1.2:8000/ra1.mp3", "@radioprvi", function(id) {
+			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
+				spored(id,data);
+			});	
 		});
 	}
 
