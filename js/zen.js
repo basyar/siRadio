@@ -10,6 +10,10 @@ Modernizr.addTest('ipod', function () {
   return !!navigator.userAgent.match(/iPod/i);
 });
 
+Modernizr.addTest('isDebugURL', function () {
+  return !!location.protocol.match(/file/i);
+});
+
 Modernizr.addTest('android', function () {
   return !!navigator.userAgent.match(/Android 2.2/i);
 });
@@ -163,7 +167,7 @@ $(document).ready(function() {
 
 	//podcasti
 	dodajPodcast("Dogodki in odmevi", "http://www.rtvslo.si/podcasts/dogodki_in_odmevi.xml",function(id) {
-		if (!Modernizr.android && !Modernizr.appleios) {
+		if (!Modernizr.android && !Modernizr.appleios && !Modernizr.isdebugurl ) {
 			$("div.tip").first().remove();
 			$("div.tip").first().addClass("gledam").find("section").first().addClass("gledam");
 		};
@@ -172,13 +176,13 @@ $(document).ready(function() {
 		dodajPodcast("Odbita do bita", "http://www.rtvslo.si/podcasts/odbita_do_bita.xml",function() {});
 	});
 
-	if (Modernizr.android || Modernizr.appleios) {
+	if (Modernizr.android || Modernizr.appleios || Modernizr.isdebugurl ){
 		dodajRadio("Prvi Program", "http://192.168.1.2:8000/ra1.mp3", "@radioprvi", function(id) {
 			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
 				spored(id,data);
 			});	
 		});
-		
+
 		dodajRadio("Radio Študent", "http://kruljo.radiostudent.si:8000/hiq", "@radiostudent", function(id) {
 			$.yql('select * from html where url="http://www.radiostudent.si/sections.php?artid=8534" and xpath="//table[@id=\'content\']//font[@class=\'content\']"', function(data) {
 				var vsebina = data.query.results.font[2].content.split(";");
@@ -273,7 +277,7 @@ function dodajPodcast(ime, url,cb) {
 		predvajalnik(id, data.query.results.item[0].content.url);
 		$("#"+id+" article h4").html($.jPlayer.convertTime( data.query.results.item[0].content.duration) );
 		$("#"+id+" article h2").html(data.query.results.item[0].title).data("opis", data.query.results.item[0].title);
-		$('<span class="handle">'+($(".tip:last nav section").length)+'</span>').appendTo( ".tip:last .grip" );
+		$('<li class="handle">'+($(".tip:last nav section").length)+'</li>').appendTo( ".tip:last .grip" );
 		posodobi_grip();
 		cb(id);
 	});

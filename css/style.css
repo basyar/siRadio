@@ -117,11 +117,6 @@ H1.kontekst
 	padding: 0;
 	display: inline;
 }
-.stream .kontekst
-{
-	left: -65px;
-	top: 93px;
-}
 .gplayer:nth-child() .circle
 {
 	background-color: #FF7300;
@@ -180,7 +175,8 @@ CODE
 }
 .handle.izbran
 {
-	color: rgba(190, 190, 190, 1);
+	color: rgba(106, 106, 106, 1);
+	display: inline;
 }
 #navigacija
 {
@@ -190,6 +186,10 @@ CODE
 	margin: 0px;
 	padding: 0px;
 	position: fixed;
-	left: -50px;
-	top: 80px;
+	left: -80px;
+	top: 100px;
+}
+#navigacija UL, #navigacija LI
+{
+	display: inline-block;
 }
