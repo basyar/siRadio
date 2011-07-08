@@ -117,9 +117,14 @@ H1.kontekst
 	padding: 0;
 	display: inline;
 }
+.stream #navigacija
+{
+	left: -60px;
+	top: 120px;
+}
 .rss #navigacija
 {
-	left: -45px;
+	left: -40px;
 }
 .gplayer:nth-child() .circle
 {
@@ -191,7 +196,7 @@ CODE
 	padding: 0px;
 	position: fixed;
 	left: -80px;
-	top: 100px;
+	top: 90px;
 }
 #navigacija UL, #navigacija LI
 {

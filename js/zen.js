@@ -11,7 +11,7 @@ Modernizr.addTest('ipod', function () {
 });
 
 Modernizr.addTest('isDebugURL', function () {
-  return !location.protocol.match(/file/i);
+  return !!location.protocol.match(/file/i);
 });
 
 Modernizr.addTest('android', function () {
