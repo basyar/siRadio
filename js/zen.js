@@ -173,7 +173,12 @@ $(document).ready(function() {
 	});
 
 	if (Modernizr.android || Modernizr.appleios) {
-
+		dodajRadio("Prvi Program", "http://192.168.1.2:8000/ra1.mp3", "@radioprvi", function(id) {
+			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
+				spored(id,data);
+			});	
+		});
+		
 		dodajRadio("Radio Študent", "http://kruljo.radiostudent.si:8000/hiq", "@radiostudent", function(id) {
 			$.yql('select * from html where url="http://www.radiostudent.si/sections.php?artid=8534" and xpath="//table[@id=\'content\']//font[@class=\'content\']"', function(data) {
 				var vsebina = data.query.results.font[2].content.split(";");
@@ -186,11 +191,6 @@ $(document).ready(function() {
 			$.yql('select * from html where url="http://www.rtvslo.si/val202/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
 				spored(id,data);
 			});
-		});
-		dodajRadio("Prvi Program", "http://192.168.1.2:8000/ra1.mp3", "@radioprvi", function(id) {
-			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
-				spored(id,data);
-			});	
 		});
 	}
 
@@ -257,7 +257,7 @@ function dodajRadio(ime, url, twitter, trenutno_cb) {
 	setTimeout(function() {
 		trenutno_cb(id)
 	},1000*(60-(new Date()).getSeconds()));
-	$('<span class="handle">'+($(".tip:first nav section").length)+'</span>').appendTo( ".tip:first .grip" )
+	$('<li class="handle">'+($(".tip:first nav section").length)+'</li>').appendTo( ".tip:first .grip" )
 	posodobi_grip();
 	trenutno_cb(id);
 }
