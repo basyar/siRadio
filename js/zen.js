@@ -15,7 +15,7 @@ Modernizr.addTest('isDebugURL', function () {
 });
 
 Modernizr.addTest('android', function () {
-  return !!navigator.userAgent.match(/Android 2.2/i);
+  return !!navigator.userAgent.match(/Android/i);
 });
 
 Modernizr.addTest('appleios', function () {
