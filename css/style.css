@@ -67,7 +67,7 @@ BODY
 H1
 {
 	font-size: 40px;
-	margin: 40px;
+	margin: 20px;
 	color: rgba(190, 190, 190, 1);
 	text-shadow: -1px -1px 1px rgba(114, 114, 114, 0.6);
 	font-weight: bolder;
@@ -75,7 +75,7 @@ H1
 /*player*/
 SECTION
 {
-	margin: 50px auto;
+	margin: 0;
 	display: block;
 }
 ARTICLE
@@ -116,6 +116,10 @@ H1.kontekst
 	margin: 0;
 	padding: 0;
 	display: inline;
+}
+.rss #navigacija
+{
+	left: -45px;
 }
 .gplayer:nth-child() .circle
 {
@@ -192,4 +196,8 @@ CODE
 #navigacija UL, #navigacija LI
 {
 	display: inline-block;
+}
+.android #navigacija
+{
+	display: none;
 }

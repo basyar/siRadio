@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-#v10
+#v12
 
 CACHE:
 css/style.css
