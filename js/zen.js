@@ -164,7 +164,7 @@ function murmur(key, seed) {
       );
   })(jQuery);
 
-
+ 
 $(document).ready(function() {
 
 	//podcasti
