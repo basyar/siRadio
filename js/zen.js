@@ -17,7 +17,9 @@ Modernizr.addTest('isDebugURL', function () {
 Modernizr.addTest('android', function () {
   return !!navigator.userAgent.match(/Android/i);
 });
-
+Modernizr.addTest('chrome', function () {
+  return !!navigator.userAgent.match(/Chrome/i);
+});
 Modernizr.addTest('appleios', function () {
   return (Modernizr.ipad || Modernizr.ipod || Modernizr.iphone);
 });
@@ -167,7 +169,7 @@ $(document).ready(function() {
 
 	//podcasti
 	dodajPodcast("Dogodki in odmevi", "http://www.rtvslo.si/podcasts/dogodki_in_odmevi.xml",function(id) {
-		if (!Modernizr.android && !Modernizr.appleios && !Modernizr.isdebugurl ) {
+		if (!Modernizr.android && !Modernizr.appleios && !Modernizr.isdebugurl || !Modernizr.chrome) {
 			$("div.tip").first().remove();
 			$("div.tip").first().addClass("gledam").find("section").first().addClass("gledam");
 		};
@@ -176,7 +178,7 @@ $(document).ready(function() {
 		dodajPodcast("Odbita do bita", "http://www.rtvslo.si/podcasts/odbita_do_bita.xml",function() {});
 	});
 
-	if (Modernizr.android || Modernizr.appleios || Modernizr.isdebugurl ){
+	if (Modernizr.android || Modernizr.appleios || Modernizr.isdebugurl || Modernizr.chrome ){
 		dodajRadio("Prvi Program", "http://192.168.1.2:8000/ra1.mp3", "@radioprvi", function(id) {
 			$.yql('select * from html where url="http://www.rtvslo.si/radioprvi/spored" and xpath="//table[@class=\'schedule\']/tr/td"', function(data) {
 				spored(id,data);
@@ -186,7 +188,7 @@ $(document).ready(function() {
 		dodajRadio("Radio Študent", "http://kruljo.radiostudent.si:8000/hiq", "@radiostudent", function(id) {
 			$.yql('select * from html where url="http://www.radiostudent.si/sections.php?artid=8534" and xpath="//table[@id=\'content\']//font[@class=\'content\']"', function(data) {
 				var vsebina = data.query.results.font[2].content.split(";");
-				var id = $("#"+kaj);
+				var id = $("#"+id);
 				id.find("article h2").html("Ni podatka");
 			});	
 		});
@@ -197,44 +199,73 @@ $(document).ready(function() {
 			});
 		});
 	}
-
+	function levo () {
+		var gledam =$("div.tip"); 
+		if (gledam.next().length) {
+			$("section").removeClass("gledam");
+			gledam.removeClass("gledam").next().addClass("gledam").find("section").first().addClass("gledam");
+			posodobi_grip();
+		}
+	}
+	function desno () {
+		var gledam =$("div.tip"); 
+		if (gledam.prev().length) {
+			$("section").removeClass("gledam");
+			gledam.removeClass("gledam").prev().addClass("gledam").find("section").first().addClass("gledam");
+			posodobi_grip();
+		};
+	}
+	function dol () {
+     	var gledam =$("section.gledam"); 
+     	if (gledam.next().length) {
+	     	gledam.removeClass("gledam")
+	     	.next().addClass("gledam")
+	     	posodobi_grip();
+     	};
+	}
+	function gor () {
+     	var gledam =$("section.gledam"); 
+     	if (gledam.prev().length) {
+	     	gledam.removeClass("gledam")
+	     	.prev().addClass("gledam")
+	     	posodobi_grip();
+     	};
+	}
 	if (Modernizr.touch){
 		$(document).touchwipe({
 		     wipeLeft: function() {
-		     	var gledam =$("div.tip"); 
-		     	if (gledam.next().length) {
-		     		$("section").removeClass("gledam");
-		     		gledam.removeClass("gledam").next().addClass("gledam").find("section").first().addClass("gledam");
-		     		posodobi_grip();
-		     	}
+		     	levo();
 		     },
 		     wipeRight: function() {
-		     	var gledam =$("div.tip"); 
-		     	if (gledam.prev().length) {
-		     		$("section").removeClass("gledam");
-		     		gledam.removeClass("gledam").prev().addClass("gledam").find("section").first().addClass("gledam");
-		     		posodobi_grip();
-		     	};
+		     	desno();
 		     },
 		     wipeDown: function() {
-		     	var gledam =$("section.gledam"); 
-		     	if (gledam.next().length) {
-			     	gledam.removeClass("gledam")
-			     	.next().addClass("gledam")
-			     	posodobi_grip();
-		     	};
+		     	dol();
 		     },
 		     wipeUp: function() { 
-		     	var gledam =$("section.gledam"); 
-		     	if (gledam.prev().length) {
-			     	gledam.removeClass("gledam")
-			     	.prev().addClass("gledam")
-			     	posodobi_grip();
-		     	};
+		     	gor();
 		     }
 		})
 	} else {
-	  // todo alternativna navigacija
+	  $(document).keydown(function(e) {
+	  	console.log(e.keyCode)
+	  	var edol = 40;
+	  	var egor = 38;
+	  	var elevo = 37;
+	  	var edesno = 39;
+	  	if (e.keyCode == edol) {
+	  		dol();
+	  	};
+	  	if (e.keyCode == egor) {
+	  		gor();
+	  	};
+	  	if (e.keyCode == elevo) {
+	  		levo();
+	  	};
+	  	if (e.keyCode == edesno) {
+	  		desno();
+	  	};
+	  })
 	}  
 
 	if (Modernizr.appleios) {
@@ -374,7 +405,16 @@ function predvajalnik(ime, url) {
 			$("#"+ime+" .gplayer").removeClass( "play" );
 			$("#"+ime+' .gplayer .progress').css({rotate: '0deg'});
 		});
-		
+		player.bind($.jPlayer.event.abort, function(event) {   
+			$("#"+ime+' .gplayer .circle').removeClass( "rotate" );
+			$("#"+ime+" .gplayer").removeClass( "play" );
+			$("#"+ime+' .gplayer .progress').css({rotate: '0deg'});
+		});
+		player.bind($.jPlayer.event.error, function(event) {   
+			$("#"+ime+' .gplayer .circle').removeClass( "rotate" );
+			$("#"+ime+" .gplayer").removeClass( "play" );
+			$("#"+ime+' .gplayer .progress').css({rotate: '0deg'});
+		});
 		player.bind($.jPlayer.event.pause, function(event) {   
 			$("#"+ime+' .gplayer .circle').removeClass( "rotate" );
 			$("#"+ime+" .gplayer").removeClass( "play" );
